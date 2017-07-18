@@ -2,22 +2,36 @@
 Linode Cluster Toolkit
 ======================
 
-Linode Cluster Toolkit's goal is to make provisioning and
+The Linode Cluster Toolkit project's goal is to make provisioning and
 configuration of large secure clusters on Linode cloud simple for users and 
-applications.
+applications. 
 
 The project consists of two main components:
 
 + **Linode Cluster Toolkit** or **LCT**
   
-  LCT is a Python library that provides interfaces for provisioning and 
-  configuring clusters using Linode's v4_ and v3_ APIs.
+  LCT is a Python library that provides interfaces for provisioning,  
+  configuring and querying clusters. See the `Architecture`_ diagram for
+  a list of interfaces it supports.
   
+  LCT's interfaces and functionality are designed to be useful for a wide spectrum
+  of client applications - from simple command-line tools and scripts to 
+  multi-tenant SaaS systems and web applications. 
+  
+  This is achieved by providing multiple implementations for every service - 
+  while one implementation can be extremely simple and suitable for a single user 
+  to use on their personal computer, another implementation may integrate
+  with complex software which provide production grade services making it suitable
+  for large multi-tenant web applications and SaaS systems.
+  
+  LCT uses and integrates with Linode's v4_ and v3_ APIs, StackScripts_,
+  optionally with well-known tools like cloud-init_ and Ansible, 
+  purpose-built software like HashiCorp Vault for secrets management and 
+  Celery for task queuing, and SQL databases for cluster information 
+  storage and querying.  
+
   It supports both Python 3 and Python 2 environments.
   
-.. _v4: https://developers.linode.com/v4/introduction
-.. _v3: https://www.linode.com/api  
-
 
 + **LinodeTool**
 
@@ -40,7 +54,31 @@ from this GitHub repo:
     # Python 2
     $ pip install git+https://github.com/pathbreak/linode-cluster-toolkit.git
     
-After code
+    
+LCT does not install any of the other 3rd party software it's capable of 
+integrating with. Depending on your particular application's requirements, 
+you can **optionally** install one or more of the following software that
+LCT is capable of integrating with:
+
++ **HashiCorp Vault** for enterprise grade secrets management
+
+  See `Install Vault`_ for installation procedure.
+  
++ **Celery** for distributed task execution
+
+  Cluster creation can be a time consuming task. LCT can integrate with
+  Celery's concurrent task execution capabilities to make the process
+  faster, perform retries with exponential back-offs in case of failures,
+  and store a list of failed tasks for later retries.
+  
++ A **database** for cluster inventory and state storage, and querying
+
+  LCT can integrate with any of the following databases:
+  
+  - **TinyDB**
+    A simple document database. See `TinyDB Installation`_.
+    
+  - 
 
 
 Features
@@ -91,3 +129,12 @@ Guide to reading and understanding this code
 + Toolkit provides a number of *_service() methods that return an appropriate *Service instance.
   For example, ClusterService provides cluster management services. 
   InventoryService provides inventory storage and querying services.
+
+
+
+.. _v4: https://developers.linode.com/v4/introduction
+.. _v3: https://www.linode.com/api  
+.. _StackScripts: https://www.linode.com/stackscripts
+.. _cloud-init: https://cloud-init.io/
+.. _`Install Vault`: https://www.vaultproject.io/docs/install/index.html
+.. _`TinyDB Installation`: https://tinydb.readthedocs.io/en/latest/getting-started.html#installing-tinydb
