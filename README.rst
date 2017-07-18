@@ -146,16 +146,28 @@ Basic Toolkit API usage
     }
     plan = ClusterPlan(plandict)
 
+    # Create the cluster.
     tk.cluster_service().create_cluster(tkctx, plan, 'My First Cluster', 'mycluster1')
 
 
 
 LinodeTool usage
-=======================
+================
 
-Single node
+1. Basic cluster creation
 
-Basic cluster
+.. code:: bash
+
+    $ linodetool cluster create ‘ha-wordpress’ ha-wordpress-plan.yaml
+
+
+
+2. Single node creation
+
+.. code:: bash
+
+    $ linodetool node create newark ‘1gb’ ‘ubuntu 16.04 lts’
+
 
 
 Cluster Plans
