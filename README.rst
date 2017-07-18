@@ -56,7 +56,8 @@ from this GitHub repo:
     
     
 LCT does not install any of the other 3rd party software it's capable of 
-integrating with. Depending on your particular application's requirements, 
+integrating with. Depending on your particular application's requirements
+or depending on the infrastructure already available to you, 
 you can **optionally** install one or more of the following software that
 LCT is capable of integrating with:
 
@@ -71,14 +72,28 @@ LCT is capable of integrating with:
   faster, perform retries with exponential back-offs in case of failures,
   and store a list of failed tasks for later retries.
   
+  See `Install Celery`_ for installation.
+  
 + A **database** for cluster inventory and state storage, and querying
 
   LCT can integrate with any of the following databases:
   
   - **TinyDB**
-    A simple document database. See `TinyDB Installation`_.
+    A simple document database. See `TinyDB Installation`_. LCT uses this
+    database for its storage needs by default.
     
-  - 
+  - **MongoDB**
+    Popular, highly scalable document database. See `MongoDB Installation`_.
+    
+  - **MySQL / MariaDB**
+    See `MySQL Installation`_ or `MariaDB Installation`_.
+    
+  - **PostgreSQL**
+    See `PostgreSQL Installation`_.
+    
+  - **SQLite**
+    There is no installation required for the database itself, but 
+    see `SQLite Installation`_ for some useful tools and utilities.
 
 
 Features
@@ -90,7 +105,48 @@ Features
 
 Basic Toolkit API usage
 =======================
-1. 
+1. Basic cluster creation
+
+.. code:: python
+    from lct import Toolkit, ToolkitContext
+    from lct.clusters.clusterplan import ClusterPlan
+
+    # Create a toolkit configuration to configure the 
+    # providers the toolkit uses for providing its services.
+    # An empty configuration makes the toolkit select the simplest behavior
+    # for all services - secrets are handled by the simple secrets provider,
+    # cluster state and inventories are stored to local filesystem as JSON files
+    # via TinyDB, tasks are executed by a simple sequential or multithreaded
+    # queue.
+    tkconf = {}
+    tk = Toolkit(tkconf)
+
+    # Create a ToolkitContext to specify the application and customer context
+    # for any cluster operaiton. This is primarily stored as the context for
+    # storing cluster state and inventory information.
+    tkctx = ToolkitContext('testapp', 'me')
+
+    # Specify a cluster plan. This can be a simple dict or loaded from a YAML or JSON file. 
+    plandict = {
+        'name' : 'testcluster',
+        'regions': [
+            {
+                'region' : 'us-east-1a',
+                'nodes' : [
+                    {
+                        'name': 'nodeplan1',
+                        'type': 'Linode 1024',
+                        'count': 2,
+                        'distribution' : 'linode/ubuntu16.04lts'
+                    }
+                ]
+            }
+        ]
+    }
+    plan = ClusterPlan(plandict)
+
+    tk.cluster_service().create_cluster(tkctx, plan, 'My First Cluster', 'mycluster1')
+
 
 
 LinodeTool usage
@@ -137,4 +193,10 @@ Guide to reading and understanding this code
 .. _StackScripts: https://www.linode.com/stackscripts
 .. _cloud-init: https://cloud-init.io/
 .. _`Install Vault`: https://www.vaultproject.io/docs/install/index.html
+.. _`Install Celery`: http://www.celeryproject.org/install/
 .. _`TinyDB Installation`: https://tinydb.readthedocs.io/en/latest/getting-started.html#installing-tinydb
+.. _`MongoDB Installation`: https://docs.mongodb.com/manual/installation/
+.. _`MySQL Installation`: https://dev.mysql.com/downloads/
+.. _`MariaDB Installation`: https://mariadb.com/kb/en/mariadb/getting-installing-and-upgrading-mariadb/
+.. _`PostgreSQL Installation`: https://www.postgresql.org/download/
+.. _`SQLite Installation`: https://www.sqlite.org/download.html
