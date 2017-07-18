@@ -13,10 +13,16 @@ The project consists of two main components:
   LCT is a Python library that provides interfaces for provisioning and 
   configuring clusters using Linode's v4_ and v3_ APIs.
   
+  It supports both Python 3 and Python 2 environments.
+  
 .. _v4: https://developers.linode.com/v4/introduction
 .. _v3: https://www.linode.com/api  
 
 
++ **LinodeTool**
+
+  LinodeTool is a command-line tool that uses LCT to provision and configure
+  clusters and single nodes. 
 
 Features
 ========
