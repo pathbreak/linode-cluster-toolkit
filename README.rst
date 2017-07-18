@@ -108,6 +108,7 @@ Basic Toolkit API usage
 1. Basic cluster creation
 
 .. code:: python
+
     from lct import Toolkit, ToolkitContext
     from lct.clusters.clusterplan import ClusterPlan
 
