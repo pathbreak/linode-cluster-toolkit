@@ -1,0 +1,132 @@
+# An example linode cluster toolkit cluster plan for a large IoT data processing cluster 
+# consisting of Spark streaming data clusters, Kafka message queue nodes
+# in different regions,
+# and PostgreSQL clusters for storage.
+#
+
+name: 'iot-cruncher'
+
+regions:
+- region: 'us-east-1a'
+
+  # Counters are running counters whose state is maintained by the toolkit 
+  # across cluster changes.
+  # Very useful for node and host naming.      
+  # We're declaring the names of the counters we'll be using in this region.
+  # They can also be declared at global scope so that a running counter
+  # can be used across nodes of different regions.
+  counters:
+    - sparkcounter
+    - kafkacounter
+    - postgrescounter
+
+
+
+  nodes:
+  
+  - name: sparkservers
+    type: 'g5-highmem-8'
+    count: 20
+    nodenames: 'spark-{sparkcounter}'
+    hostnames: 'spark-{sparkcounter}'
+    publicfqdn: 'spark-{sparkcounter}.iot.useast'
+    privatefqdn: 'internal.spark-{sparkcounter}.iot.useast'
+    
+    # The storage plan below specifies a customized storage allocation 
+    # for all nodes of this node plan.
+    storage: 
+    - label: boot
+      size: 80%
+      fs: ext4
+      # device: /dev/sda by default
+      boot: yes
+      
+    - label: swap
+      size: 20%
+      fs: swap
+      
+
+  - name: kafkaservers
+    type: 'Linode 24576'
+    count: 8
+    storage: default
+    nodenames: 'kafka-{kafkacounter}'
+    hostnames: 'kafka-{kafkacounter}'
+    publicfqdn: 'kafka-{kafkacounter}.iot.useast'
+    privatefqdn: 'internal.kafka-{kafkacounter}.iot.useast'
+    
+    
+    
+  - name: postgrescluster
+    type: 'Linode 24576'
+    count: 8
+    nodenames: 'pg-{postgrescounter}'
+    hostnames: 'pg-{postgrescounter}'
+    publicfqdn: 'pg-{postgrescounter}.iot.useast'
+    privatefqdn: 'internal.pg-{postgrescounter}.iot.useast'
+    
+    # The storage plan below specifies a customized storage allocation 
+    # for all nodes of this node plan.
+    storage: 
+    - label: boot
+      size: 80%
+      fs: ext4
+      # device: /dev/sda by default
+      boot: yes
+      
+    - label: swap
+      size: 20%
+      fs: swap
+      
+      # A block store volume. Every node in this node plan will
+      # have a separate 500GB block store.
+      # Note: Block stores are currently in beta and available only on
+      # demand only in Neward datacenter.
+    - label: data 
+      size: 500GB
+      type: blockstore
+      fs: xfs
+      mount: /mnt/db
+      
+    
+
+# 2nd set of kafka nodes in Europe region 
+- region: 'eu-central-1a'
+
+  counters:
+    - kafkacounter2
+
+  nodes:
+  - name: kafkaservers2
+    type: 'Linode 24576'
+    count: 8
+    storage: default
+    nodenames: 'kafka-{kafkacounter2}'
+    hostnames: 'kafka-{kafkacounter2}'
+    publicfqdn: 'kafka-{kafkacounter2}.iot.eur'
+    privatefqdn: 'internal.kafka-{kafkacounter2}.iot.eur'
+    
+      
+      
+# 3rd set of kafka nodes in Singapore region 
+- region: 'ap-south-1a'
+
+  counters:
+    - kafkacounter3
+
+  nodes:
+  - name: kafkaservers3
+    type: 'Linode 24576'
+    count: 8
+    storage: default
+    nodenames: 'kafka-{kafkacounter3}'
+    hostnames: 'kafka-{kafkacounter3}'
+    publicfqdn: 'kafka-{kafkacounter3}.iot.sg'
+    privatefqdn: 'internal.kafka-{kafkacounte3}.iot.sg'
+    
+      
+      
+
+    
+
+

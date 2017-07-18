@@ -1,0 +1,69 @@
+# A cluster plan describes Linode resources across multiple regions.
+#
+name: 'testplan'
+
+# 1st Region. Region can be a v3 API datacenter ID like '9' for Singapore,
+# or a v4 API region ID like 'us-south-1a'
+# or a place label with partial match like 'Dallas'.
+regions:
+- region: '9'
+
+  # In each region, specify a list of node plans.
+  # 'type' can be 
+  #     - v4 type ID like 'g5-nanode-1', or
+  #     - v3 plan ID like '1', or
+  #     - label like 'Linode 1024', or
+  #     - attribute based like 'ram:80GB' or 'disk:1536GB' or 'price:960'. The selected attribute 
+  #         should be such that it uniquely identifies a type, otherwise the plan is flagged as
+  #         ambiguous and aborted.
+  nodes:
+    # It's useful to give a name to a node plan so that all nodes of this
+    # set in the created cluster can be grouped using that name and manipulated
+    # together, for example, to startup or shutdown or delete.
+  - name: nodeplan1
+    type: 'Linode 1024'
+    count: 1
+    
+    # The storage plan below specifies a customized storage allocation 
+    # for all nodes of this node plan.
+    storage: 
+    - label: boot
+      size: 80%
+      fs: ext4
+      # device: /dev/sda by default
+      boot: yes
+      
+    - label: swap
+      size: 20%
+      fs: swap
+      
+      # A block store volume. Every node in this node plan will
+      # have a separate 100GB block store.
+      # label for blockstore can only have A-Za-z0-9.-_
+    - label: data 
+      size: 100GB
+      type: blockstore
+      fs: xfs
+      mount: /mnt/data
+      
+    
+
+  - name: nodeplan2
+    type: '1'
+    count: 1
+    # If storage plan is unspecified or set to 'default', it's left 
+    # to Linode's API default implementation. Generally, Linode API creates
+    # two disks - a root device with (total storage - 512MB), and a 512MB swap disk.
+    storage: default
+    
+
+# 2nd region 
+- region: 'us-south-1a'
+
+  
+  nodes:
+    # A single nodeplan consisting of just a single node. If count is not 
+    # specified, single node is assumed.
+  - type: 'g5-nanode-1'
+
+

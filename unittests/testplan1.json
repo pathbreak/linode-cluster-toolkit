@@ -1,0 +1,17 @@
+{
+  "regions": [
+    {
+      "region": "9", 
+      "nodes": [
+        {"count": 1, "type": "Linode 1024"}, 
+        {"count": 1, "type": "1"}
+      ]
+    }, 
+    {
+      "region": "us-south-1a", 
+      "nodes": [
+        {"count": 1, "type": "g5-nanode-1"}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,136 @@
+# An example linode cluster toolkit cluster plan for a high availability
+# Wordpress content management system being used for high traffic 
+# ecommerce.
+# Consists of 2 regions for disaster recovery, each with nodebalancers, web servers, 
+# memcached clusters and MySQL clusters.
+
+name: 'ha-wordpress'
+
+# A regionplan is a template for an entire region.
+# The template can then be applied to multiple regions for
+# a highly available, redundant, disaster recoverable setup.
+regionplan:
+  name: 'ha-wordpress-region'
+  
+  nodes:
+  - name: webservers
+    type: 'g5-standard-1'
+    count: 20
+    tag: webserver
+    
+    # Specify the node initial configuration steps.
+    init: 
+      boot-on-create: true
+      firstboot:
+        - name: 'cloudinit:firewalled'
+        - name: 'localansible:diskprovisioning'
+        - name: 'stackscript:linode/LAMP'
+      
+      # Specify any init steps to be done at every node boot up.
+      # boot:
+      #   - name: ...
+      #
+      # Specify any init steps to be done on node as part of cluster start up.
+      # clusterstarting:
+      #   - name: ...
+      #
+      # Specify any init steps to be done on node after all nodes of cluster have started up.
+      # clusterstarted:
+      #   - name: ...
+      #
+      # Specify any init steps to be done on node after all clusters in region have started up.
+      # regionready:
+      #   - name: ...
+      #
+      # Specify any init steps to be done on node after all regions are ready and entire plan is 
+      # ready.
+      # planready:
+      #   - name: ...
+      
+      
+    
+  - name: memcached
+    tag: memcached
+    type: 'g5-highmem-8'
+    count: 10
+    init: 
+      boot-on-create: false
+      firstboot:
+        - name: 'cloudinit:firewalled'
+        - name: 'ansible:/mnt/deploymentscripts/ansible/memcached.yaml'
+  
+  - name: mysqlnodes
+    type: 'g5-standard-8'
+    tag: mysqlnode
+    count: 4
+    init: 
+      boot-on-create: false
+      firstboot:
+        - name: 'cloudinit:firewalled'
+        - name: 'stackscript:linode/MySQL'
+  
+  - name: ndbdatanodes
+    type: 'g5-highmem-8'
+    count: 5
+    tag: ndbdatanode
+    # The storage plan below specifies a customized storage allocation 
+    # for all nodes of this node plan.
+    storage: 
+    - label: boot
+      size: 80%
+      fs: ext4
+      # device: /dev/sda by default
+      boot: yes
+      
+    - label: swap
+      size: 20%
+      fs: swap
+      
+      # A block store volume. Every node in this node plan will
+      # have a separate 500GB block store.
+      # Note: Block stores are currently in beta and available only on
+      # demand only in Neward datacenter.
+    - label: data 
+      size: 500GB
+      type: blockstore
+      fs: xfs
+      mount: /mnt/ndb
+      
+    init:
+      firstboot:
+        - name: 'cloudinit:firewalled'
+        - name: 'ansible:/mnt/deploymentscripts/mysql/ndb.yaml'
+
+  - name: ndbmgmtnodes
+    type: 'g5-standard-8'
+    count: 2
+    init:
+      firstboot:
+        - name: 'cloudinit:firewalled'
+        - name: 'ansible:/mnt/deploymentscripts/mysql/ndbmgmt.yaml'
+
+    
+    
+  # Specify the NodeBalancers (https://www.linode.com/nodebalancers/) to 
+  # use in each region for load balancing purposes.
+  # Each NB can specify the set of nodes it balances using node tags.
+  nodebalancers:
+  
+  - name: webservernb
+    tag: webservers
+    port: 80
+    protocol: http
+  
+  - name: mysqlnb
+    tag: mysqlnodes
+    port: 3306
+    protocol: tcp
+    
+  
+# 2 regions for disaster recovery. Specify the same regionplan for both.      
+regions:
+- region: 'us-east-1a'
+  regionplan: 'ha-wordpress-region'
+
+- region: 'eu-central-1a'
+  regionplan: 'ha-wordpress-region'
