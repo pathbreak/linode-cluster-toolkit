@@ -32,13 +32,13 @@ Both the toolkit library and LinodeTool are part of the same Python package.
 Until this package is published to PyPI, install it using ``pip`` to pull 
 from this GitHub repo:
 
-.. code:: python
+.. code:: bash
 
-    import time
+    # Python 3
+    $ pip3 install git+https://github.com/pathbreak/linode-cluster-toolkit.git
 
-    # Create a log named rviews_intfs, which automatically rotates at midnight
-    #     category must be unique per logging file
-    log = RotatingTOMLLog('rviews_intfs', category='route-views')
+    # Python 2
+    $ pip install git+https://github.com/pathbreak/linode-cluster-toolkit.git
     
 After code
 
