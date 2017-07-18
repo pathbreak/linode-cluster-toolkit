@@ -24,18 +24,39 @@ The project consists of two main components:
   LinodeTool is a command-line tool that uses LCT to provision and configure
   clusters and single nodes. 
 
+
+Installation
+============
+Both the toolkit library and LinodeTool are part of the same Python package.
+
+Until this package is published to PyPI, install it using ``pip`` to pull 
+from this GitHub repo:
+
+.. code:: python
+
+    import time
+
+    # Create a log named rviews_intfs, which automatically rotates at midnight
+    #     category must be unique per logging file
+    log = RotatingTOMLLog('rviews_intfs', category='route-views')
+    
+After code
+
+
 Features
 ========
 
 
 
-Installation
-============
 
 
+Basic Toolkit API usage
+=======================
+1. 
 
-Basic Usage
-===========
+
+LinodeTool usage
+=======================
 
 Single node
 
@@ -59,7 +80,8 @@ Cardinality models
  as how to share the same database or same task queues, etc>
 
 
-
+Architecture
+============
  
 Guide to reading and understanding this code
 ============================================
