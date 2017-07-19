@@ -68,33 +68,52 @@ Features
   + create clusters from shell scripts using shell scripts wrapper [Planned]
   
 + Cluster Configuration 
+
   + oriented towards making big data deployments on Linode easy
+
   + configure using cloud-init [Under implementation]
+
   + configure using Ansible module
+
   + configure using StackScripts
+
   + Hostnames [Under implementation]
+
   + dynamic firewall configuration across multiple nodes based on deployed software [Planned]
+
   + advanced DNS topologies, split-horizon DNS provisioning [Planned]
+
   + bundled cluster plan templates for big data stacks [Planned]
 
 + Security
+
   + secure by default configurations for all provisioned nodes
+
   + all nodes configured with tight firewall rules - drop all incoming and outgoing traffic by default (except SSH)
+
   + all nodes have SSH password authentication disabled
+
   + integrate with secrets management providers like HashiCorp Vault [Under implementation]
   
   
 + Cluster Operations
+
   + clusters are treated first-level concepts 
+
   + start cluster, stop cluster
+
   + support cluster orchestration (such as shutting down in particular order) [Under implementation]
     
 + Inventory Operations
+
   + cluster state and node information are persisted to storage backends
+
   + support for multiple storage backends
+
   + tagging and querying support
   
 + Single Node Operations
+
   + one-liners to create and delete node
 
 
