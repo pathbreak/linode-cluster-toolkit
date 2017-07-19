@@ -6,11 +6,24 @@ class ToolkitTask(object):
     
     
     
-    def __init__(self):
-        pass
+    def __init__(self, tkctx):
+        '''
+        Construct the task, giving the application+customer scoping context 
+        in which the task should be executed.
+        
+        Arguments:
+          tkctx - The toolkit context in which the task's operations should
+            be executed.
+        '''
+        self.tkctx = tkctx
     
     
     
         
     def execute(self):
         raise NotImplementedError('Subclasses should override execute')
+        
+        
+        
+        
+        

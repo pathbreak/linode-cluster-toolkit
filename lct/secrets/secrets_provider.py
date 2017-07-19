@@ -2,7 +2,12 @@ class SecretsProvider(object):
     '''
     Interface to be implemented by a secrets provider.
     '''
-
+    def initialize(self, tk):
+        raise NotImplementedError('subclasses should override this')
+        
+    def close(self):
+        raise NotImplementedError('subclasses should override this')
+        
     def get_v3_api_key(self, tkctx):
         raise NotImplementedError('subclasses should override this')
         
@@ -24,6 +29,16 @@ class SecretsProvider(object):
         
         
     def get_v4_oauth_client_secret(self, tkctx):
+        raise NotImplementedError('subclasses should override this')
+        
+        
+        
+    def get_default_root_password(self, tkctx):
+        raise NotImplementedError('subclasses should override this')
+        
+        
+
+    def get_default_root_ssh_public_key(self, tkctx):
         raise NotImplementedError('subclasses should override this')
         
         
@@ -59,6 +74,16 @@ class SecretsProvider(object):
         
         
     def store_v4_oauth_client_secret(self, tkctx, v4_oauth_client_secret):
+        raise NotImplementedError('subclasses should override this')
+        
+        
+        
+    def store_default_root_password(self, tkctx, default_root_password):
+        raise NotImplementedError('subclasses should override this')
+        
+        
+
+    def store_default_root_ssh_public_key(self, tkctx, default_root_ssh_public_key):
         raise NotImplementedError('subclasses should override this')
         
         

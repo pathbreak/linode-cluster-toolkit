@@ -123,8 +123,9 @@ class SingleNodeCreationTask(ToolkitTask):
     
     
     def __init__(self, tk, tkctx, region, parent_nodeplan, cluster, cluster_plan):
+        super(SingleNodeCreationTask, self).__init__(tkctx)
+        
         self.tk = tk
-        self.tkctx = tkctx
         self.region = region
         self.parent_nodeplan = parent_nodeplan
         self.cluster = cluster

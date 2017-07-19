@@ -78,20 +78,26 @@ LCT is capable of integrating with:
 
   LCT can integrate with any of the following databases:
   
+  
   - **TinyDB**
+  
     A simple document database. See `TinyDB Installation`_. LCT uses this
     database for its storage needs by default.
     
   - **MongoDB**
+  
     Popular, highly scalable document database. See `MongoDB Installation`_.
     
   - **MySQL / MariaDB**
+  
     See `MySQL Installation`_ or `MariaDB Installation`_.
     
   - **PostgreSQL**
+  
     See `PostgreSQL Installation`_.
     
   - **SQLite**
+  
     There is no installation required for the database itself, but 
     see `SQLite Installation`_ for some useful tools and utilities.
 
@@ -105,7 +111,18 @@ Features
 
 Basic Toolkit API usage
 =======================
-1. Basic cluster creation
+
+Basic cluster creation
+^^^^^^^^^^^^^^^^^^^^^^
+
+An important concept of LCT project is a *Cluster Plan*. A Cluster Plan
+is a description of all the nodes, nodebalancers, other resources and 
+configurations to apply to them.
+
+See `Cluster Plans`_ for examples and details of cluster plans.
+
+The snippet below creates a simple cluster plan consisting of just 2 
+nodes in 1 region.
 
 .. code:: python
 
@@ -121,6 +138,8 @@ Basic Toolkit API usage
     # queue.
     tkconf = {}
     tk = Toolkit(tkconf)
+    
+    tk.initialize()
 
     # Create a ToolkitContext to specify the application and customer context
     # for any cluster operaiton. This is primarily stored as the context for
@@ -154,30 +173,86 @@ Basic Toolkit API usage
 LinodeTool usage
 ================
 
-1. Basic cluster creation
+Basic cluster creation
+^^^^^^^^^^^^^^^^^^^^^^
+.. code:: bash
+
+    $ linodetool cluster create 'ha-wordpress' ha-wordpress-plan.yaml
+
+
+
+Single node creation
+^^^^^^^^^^^^^^^^^^^^
+Creation of a secure node is as simple as:
 
 .. code:: bash
 
-    $ linodetool cluster create ‘ha-wordpress’ ha-wordpress-plan.yaml
+    $ linodetool node create newark '1gb' 'ubuntu 16.04 lts'
+    
+But before that can work, LinodeTool requires a one-time entry of two 
+pieces of credentials:
 
++ A personal access token to use Linode's API
+  
+  You can obtain a personal access token by logging into 
+  `https://cloud.linode.com`_ with your Linode username and 
+  password, navigating to `My Profile > Integrations > Personal Access Tokens`
+  `> Create a Personal Access Token`, setting `Linodes` access to one of
+  Create/Modify/Delete, and press Create.
 
+  The web application displays a personal access token. Copy that and store
+  it in LinodeTool's secrets storage using this command:
 
-2. Single node creation
+  .. code:: bash
 
-.. code:: bash
+      $ linodetool secret set personal-token <YOUR PERSONAL ACCESS TOKEN>
+    
+  Note that LinodeTool's default secrets
+  store is an unencrypted insecure one. If you want to store more securely,
+  create a toolkit configuration and specify a more secure secrets provider.
+  
++ An SSH public key.
 
-    $ linodetool node create newark ‘1gb’ ‘ubuntu 16.04 lts’
+  If you don't have a SSH public key (usually named as ``~/.ssh/id_rsa.pub``, create one:
 
+  .. code:: bash
+  
+      $ ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ''
+  
+  Then add it to LinodeTool's secrets store:
+  
+      $ linodetool secret set default-root-ssh-public-key ~/.ssh/id_rsa
 
 
 Cluster Plans
 =============
 
+Examples
+^^^^^^^^
+Two example cluster plans for large clusters:
+
+1. `https://gist.github.com/pathbreak/59c638db0fd95c84c0f655df145ba0ac`_
+
+   This is a cluster plan for a cross-region, highly-available, disaster-recoverable 
+   82-node WordPress setup involving Apache web servers with WordPress, Memcached, 
+   MySQL cluster with NDB, Block Stores and NodeBalancers.
+   
+2. `https://gist.github.com/pathbreak/eb7242a48024b54101b432049116ae7e`_
+
+   This is a cluster plan for a 52-node big data IoT system involving Spark Streaming, 
+   Kafka input pipelines in multiple regions, a PostgreSQL cluster, 
+   high memory instances and block stores.
+   
+More details about cluster plans are in the subsections below.
+
 Regions and Nodes
 ^^^^^^^^^^^^^^^^^
+TODO
 
 Storage Plans
 ^^^^^^^^^^^^^
+TODO
+
 
 
 Cardinality models

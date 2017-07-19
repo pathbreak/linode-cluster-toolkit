@@ -1,3 +1,7 @@
+import importlib
+from lct.utils.dpath_utils import dpath_get
+from lct.utils.dynamic_class_loader import instantiate
+
 class SecretsService(object):
     '''
     Interface for storing and querying secrets such as API keys,
@@ -31,17 +35,23 @@ class SecretsService(object):
         self.tk = tk
         
         # Create the secrets provider here according to toolkit configuration.
+        provider_class_name = dpath_get(tk.conf, 'secrets/provider', 
+            'lct.secrets.simple_secrets_provider.SimpleSecretsProvider')
+        
+        self._provider = instantiate(provider_class_name)
+        self._provider.initialize(tk)
+        
         
         self._initialized = True
 
         
     def close(self):
-        pass
+        self._provider.close()
     
 
     ######################## FUNCTIONALITY =============================
     
     
     
-    def store_api_key(self, tkctx, api_key):
-        pass
+    def provider(self):
+        return self._provider

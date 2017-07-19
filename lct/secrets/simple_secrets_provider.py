@@ -40,6 +40,10 @@ class SimpleSecretsProvider(object):
     
     V3_API_KEY_SUFFIX = 'v3apikey'
     V4_PERSONAL_TOKEN_SUFFIX = 'v4perstoken'
+    V4_OAUTH_TOKEN_SUFFIX = 'v4oauthtoken'
+    V4_OAUTH_TOKEN_SUFFIX = 'v4oauthtoken'
+    DEFAULT_ROOT_PASSWORD_SUFFIX = 'defaultrootpswd'
+    DEFAULT_ROOT_SSH_PUBLIC_SUFFIX = 'defaultpublicssh'
     
     
     def __init__(self):
@@ -73,18 +77,19 @@ class SimpleSecretsProvider(object):
 
     def get_v3_api_key(self, tkctx):
         path = self._make_path(tkctx, self.V3_API_KEY_SUFFIX)
-        return self.secrets[path]
+        return self.secrets.get(path, None)
         
         
         
     def get_v4_personal_token(self, tkctx):
         path = self._make_path(tkctx, self.V4_PERSONAL_TOKEN_SUFFIX)
-        return self.secrets[path]
+        return self.secrets.get(path, None)
         
         
         
     def get_v4_oauth_token(self, tkctx):
-        raise NotImplementedError('subclasses should override this')
+        path = self._make_path(tkctx, self.V4_OAUTH_TOKEN_SUFFIX)
+        return self.secrets.get(path, None)
         
         
         
@@ -98,6 +103,20 @@ class SimpleSecretsProvider(object):
         
         
         
+    def get_default_root_password(self, tkctx):
+        path = self._make_path(tkctx, self.DEFAULT_ROOT_PASSWORD_SUFFIX)
+        return self.secrets.get(path, None)
+        
+        
+
+    def get_default_root_ssh_public_key(self, tkctx):
+        path = self._make_path(tkctx, self.DEFAULT_ROOT_SSH_PUBLIC_SUFFIX)
+        return self.secrets.get(path, None)
+        
+        
+        
+
+        
     def get_node_password(self, tkctx, node, user):
         raise NotImplementedError('subclasses should override this')
         
@@ -107,26 +126,18 @@ class SimpleSecretsProvider(object):
         raise NotImplementedError('subclasses should override this')
 
     
-    def store_v3_api_key(self, tkctx, v3_api_key):
-        path = self._make_path(tkctx, self.V3_API_KEY_SUFFIX)
-        self.secrets[path] = v3_api_key
-        self._persist(path, tkctx, v3_api_key)
         
     def store_v3_api_key(self, tkctx, v3_api_key):
-        path = self._make_path(tkctx, self.V3_API_KEY_SUFFIX)
-        self.secrets[path] = v3_api_key
-        self._persist(path, tkctx, v3_api_key)
+        self._store(tkctx, self.V3_API_KEY_SUFFIX, v3_api_key)
         
         
     def store_v4_personal_token(self, tkctx, v4_personal_token):
-        path = self._make_path(tkctx, self.V4_PERSONAL_TOKEN_SUFFIX)
-        self.secrets[path] = v4_personal_token
-        self._persist(path, tkctx, v4_personal_token)
+        self._store(tkctx, self.V4_PERSONAL_TOKEN_SUFFIX, v4_personal_token)
         
         
     def store_v4_oauth_token(self, tkctx, v4_oauth_token):
-        raise NotImplementedError('subclasses should override this')
-        
+        self._store(tkctx, self.V4_OAUTH_TOKEN_SUFFIX, v4_oauth_token)
+       
         
         
     def store_v4_oauth_client_id(self, tkctx, v4_oauth_client_id):
@@ -138,6 +149,17 @@ class SimpleSecretsProvider(object):
         raise NotImplementedError('subclasses should override this')
         
         
+    def store_default_root_password(self, tkctx, default_root_password):
+        self._store(tkctx, self.DEFAULT_ROOT_PASSWORD_SUFFIX, default_root_password)
+        
+        
+
+    def store_default_root_ssh_public_key(self, tkctx, default_root_ssh_public_key):
+        self._store(tkctx, self.DEFAULT_ROOT_SSH_PUBLIC_SUFFIX, default_root_ssh_public_key)
+        
+        
+        
+
         
     def store_node_password(self, tkctx, node, user):
         raise NotImplementedError('subclasses should override this')
@@ -150,6 +172,12 @@ class SimpleSecretsProvider(object):
 
 
     #======================== private methods ==========================
+
+
+    def _store(self, tkctx, suffix, value):
+        path = self._make_path(tkctx, suffix)
+        self.secrets[path] = value
+        self._persist(path, tkctx, value)
 
 
 

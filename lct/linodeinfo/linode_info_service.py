@@ -16,6 +16,8 @@ class LinodeInfoService(object):
     
     def __init__(self):
         self._initialized = False
+        
+        self._regions = None
 
 
 
@@ -38,9 +40,10 @@ class LinodeInfoService(object):
         self.tk.api_service().initialize(self.tk)
         
         
-        # TODO - Depending on the conf in tk.conf, optionally update cache on every startup or
+        # Depending on the conf in tk.conf, optionally update cache on every startup or
         # every x days since previous update. Then load from cache into memory and serve
         # everything from memory.
+        
         
         
         self._initialized = True
@@ -48,4 +51,21 @@ class LinodeInfoService(object):
         
     def close(self):
         pass
+        
+        
+    # ========================== FUNCTIONALITY =========================
+    
+    def get_creation_rate_limit(self):
+        '''
+        Get the current rate limit on node creation.
+        
+        Returns:
+          (limit : int, timeperiod_in_seconds : int) - A tuple of the 
+          maximum number of creation operations and the time period 
+          in seconds for which this limit is applicable.
+        '''
+        # Source: https://www.linode.com/api/linode/linode.create
+        # As of July 2017, the creation rate limit seems to be 
+        # 250 linodes per hour.
+        return (250, 3600)
     

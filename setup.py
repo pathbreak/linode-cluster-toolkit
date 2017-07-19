@@ -85,7 +85,8 @@ setup(
         'requests',
         'PyYAML',
         'argparse',
-        'dpath'
+        'dpath',
+        'linode-api'
     ],
     
     entry_points = {
