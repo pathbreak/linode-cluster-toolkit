@@ -17,7 +17,7 @@ class APIService(object):
     
     
     V4_API_URL = 'https://api.linode.com/v4/'
-    V3_API_URL = 'https://api.linode.com/
+    V3_API_URL = 'https://api.linode.com/'
 
 
     def __init__(self):

@@ -195,7 +195,7 @@ pieces of credentials:
 + A personal access token to use Linode's API
   
   You can obtain a personal access token by logging into 
-  `https://cloud.linode.com`_ with your Linode username and 
+  https://cloud.linode.com with your Linode username and 
   password, navigating to `My Profile > Integrations > Personal Access Tokens`
   `> Create a Personal Access Token`, setting `Linodes` access to one of
   Create/Modify/Delete, and press Create.
@@ -231,13 +231,13 @@ Examples
 ^^^^^^^^
 Two example cluster plans for large clusters:
 
-1. `https://gist.github.com/pathbreak/59c638db0fd95c84c0f655df145ba0ac`_
+1. https://gist.github.com/pathbreak/59c638db0fd95c84c0f655df145ba0ac
 
    This is a cluster plan for a cross-region, highly-available, disaster-recoverable 
    82-node WordPress setup involving Apache web servers with WordPress, Memcached, 
    MySQL cluster with NDB, Block Stores and NodeBalancers.
    
-2. `https://gist.github.com/pathbreak/eb7242a48024b54101b432049116ae7e`_
+2. https://gist.github.com/pathbreak/eb7242a48024b54101b432049116ae7e
 
    This is a cluster plan for a 52-node big data IoT system involving Spark Streaming, 
    Kafka input pipelines in multiple regions, a PostgreSQL cluster, 
