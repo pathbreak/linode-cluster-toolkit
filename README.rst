@@ -1,5 +1,3 @@
-.. contents::
-
 ======================
 Linode Cluster Toolkit
 ======================
@@ -7,6 +5,11 @@ Linode Cluster Toolkit
 The Linode Cluster Toolkit project's goal is to make provisioning and
 configuration of large secure clusters on Linode cloud simple for users and 
 applications. 
+
+.. contents:: :local:
+
+Overview
+--------
 
 The project consists of two main components:
 
@@ -65,8 +68,7 @@ Features
 
 + Security
   - secure by default configurations for all provisioned nodes
-  - all nodes configured with tight firewall rules - drop all incoming and outgoing traffic by default
-    (except SSH)
+  - all nodes configured with tight firewall rules - drop all incoming and outgoing traffic by default (except SSH)
   - all nodes have SSH password authentication disabled
   - integrate with secrets management providers
   
