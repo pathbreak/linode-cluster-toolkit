@@ -88,6 +88,7 @@ Features
 
 Installation
 ============
+
 Both the toolkit library and LinodeTool are part of the same Python package.
 
 Until this package is published to PyPI, install it using ``pip`` to pull 
@@ -101,6 +102,9 @@ from this GitHub repo:
     # Python 2
     $ pip install git+https://github.com/pathbreak/linode-cluster-toolkit.git
     
+
+Installation of 3rd party integrations
+--------------------------------------
     
 LCT does not install any of the other 3rd party software it's capable of 
 integrating with. Depending on your particular application's requirements
