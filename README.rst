@@ -344,7 +344,7 @@ Cardinality models
 Architecture
 ============
 
-.. image:: https://raw.githubusercontent.com/pathbreak/linode-cluster-toolkit/master/docs/images/toolkit-architecture.png
+.. image:: https://github.com/pathbreak/linode-cluster-toolkit/blob/master/docs/images/toolkit_architecture.png
  
 Guide to reading and understanding this code
 ============================================
