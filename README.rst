@@ -54,9 +54,12 @@ Features
 ========
 
 + Cluster Provisioning
-  - all cluster resources and configurations are described in `Cluster Plans`_
-  - cross-region clusters
-  - can provision Linodes, NodeBalancers, Disks, Block Stores
+
+  + all cluster resources and configurations are described in `Cluster Plans`_
+  
+  + cross-region clusters
+  
+  + can provision Linodes, NodeBalancers, Disks, Block Stores
   - private cloud [Under implementation]
   - create clusters from cluster plans using Ansible module [Planned]
   - create clusters from shell scripts using shell scripts wrapper [Planned]
@@ -75,7 +78,8 @@ Features
   - secure by default configurations for all provisioned nodes
   - all nodes configured with tight firewall rules - drop all incoming and outgoing traffic by default (except SSH)
   - all nodes have SSH password authentication disabled
-  - integrate with secrets management providers
+  - integrate with secrets management providers like HashiCorp Vault [Under implementation]
+  
   
 + Cluster Operations
   - clusters are treated first-level concepts 
