@@ -1,5 +1,5 @@
   
-  > This project is still under active feature development and a production-ready 
+  **Note**: This project is still under active feature development and a production-ready 
   release is expected around July 26 2017. Until then, please expect bugs and
   use caution while using it.
 
