@@ -38,6 +38,8 @@ class Toolkit(object):
         self._linode_info_service = None
         self._inventory_service = None
         self._secrets_service = None
+        self._config_service = None
+        self._task_service = None
     
     
         
@@ -56,6 +58,8 @@ class Toolkit(object):
         self._linode_info_service = LinodeInfoService()
         self._inventory_service = InventoryService()
         self._secrets_service = SecretsService()
+        self._config_service = ConfigurationService()
+        self._task_service = TaskService()
 
         # The order below is kind of common sensical, but not critical for operations
         # because every service anyway makes sure all services it needs are initialized.
@@ -64,6 +68,8 @@ class Toolkit(object):
         self._cluster_service.initialize(self)
         self._inventory_service.initialize(self)
         self._secrets_service.initialize(self)
+        self._config_service.initialize(self)
+        self._task_service.initialize(self)
         
     
     
@@ -76,10 +82,15 @@ class Toolkit(object):
         
         self._api_service.close()
         
+        self._linode_info_service.close()
+        
         self._secrets_service.close()
         
         self._inventory_service.close()
         
+        self._config_service.close()
+        
+        self._task_service.close()
         
         
         
@@ -97,9 +108,25 @@ class Toolkit(object):
     def secrets_service(self):
         return self._secrets_service
         
+        
     
     def inventory_service(self):
         return self._inventory_service
+        
+        
+        
+    def info_service(self):
+        return self._linode_info_service
+        
+        
+        
+    def config_service(self):
+        return self._config_service
+        
+        
+        
+    def task_service(self):
+        return self._task_service
         
 
    

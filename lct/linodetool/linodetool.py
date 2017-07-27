@@ -43,6 +43,36 @@ def cluster_delete(args):
     
 def node_create(args):
     
+    # TODO If a node plan is specified, use that. Otherwise use the other
+    # arguments.
+    
+    # Every node is crreated in a cluster of its own, so that 
+    # it can avail all the services available to a full cluster.
+    cluster_name = 'cluster-{}'.format(datetime.datetime.strftime(datetime.datetime.now(), '%Y%m%d-%H%M%S'))
+    parent_cluster_plandict = {
+        'name' : cluster_name,
+        'regions' : [
+            {
+                'region' : args.region,
+                'nodes' : [
+                    {
+                        # The node plan
+                        'name' : 'singlenodeplan',
+                        'count' : 1,
+                        'type' : args.node_type,
+                        'storage' : 'default',
+                        'init' : {
+                            'distribution' : args.distribution
+                        }
+                    }
+                ]
+            }
+        ]
+    } 
+    
+    parent_cluster_plan = ClusterPlan(parent_cluster_plandict)
+    
+    
     # Create toolkit object
     # TODO If a toolkit configuration is explicitly specified,
     # load that, otherwise use default.
@@ -52,7 +82,7 @@ def node_create(args):
     tk.initialize()
     
     tkctx = ToolkitContext(args.app_id, args.cust_id)
-    tk.api_service().create_node()
+    tk.cluster_service().create_cluster(tkctx, parent_cluster_plan, cluster_name, cluster_name)
 
     
 

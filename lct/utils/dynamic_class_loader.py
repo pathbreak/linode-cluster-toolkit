@@ -14,7 +14,7 @@ def instantiate(class_name):
     provider_module_name = '.'.join(comps[:-1])
     provider_class_name = comps[-1]
     
-    # This'll raise ImportError if there module name is wrong.
+    # This'll raise ImportError if the module name is wrong.
     provider_module = importlib.import_module(provider_module_name)
     
     # This'll raise AttributeError if there's no class of that name in the module.

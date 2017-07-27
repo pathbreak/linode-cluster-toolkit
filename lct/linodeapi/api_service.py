@@ -1,4 +1,5 @@
 import requests
+import json
 
 # TODO Eventually use linode-api library. However, as of July 2017, it 
 # throws some errors related to its internal imports and is therefore 
@@ -16,8 +17,8 @@ class APIService(object):
     '''
     
     
-    V4_API_URL = 'https://api.linode.com/v4/'
-    V3_API_URL = 'https://api.linode.com/'
+    V4_API_URL = 'https://api.linode.com/v4'
+    V3_API_URL = 'https://api.linode.com'
 
 
     def __init__(self):
@@ -55,7 +56,9 @@ class APIService(object):
         
     #=============================== FUNCTIONALITY =====================
     
-    def create_node(self, tkctx, node_type, region, distribution, root_ssh_key=None):
+    def create_node(self, tkctx, node_type, region, distribution, 
+        root_password, root_ssh_key):
+            
         '''
         Create a linode.
         
@@ -68,6 +71,10 @@ class APIService(object):
           region - Region/datacenter where node should be created
           
           distribution - The OS distribution to install on this node
+          
+          root_password - Root user password. This is required parameter. 
+          
+          root_ssh_key - root user SSH public key
         '''
         
         # Note: v4 API 'create' does much more than v3 create, but 
@@ -80,21 +87,46 @@ class APIService(object):
                 tkctx.app_id, tkctx.cust_id
             ))
         
-        if root_ssh_key is None:
-            secrets = self.tk.secrets_service()
-            root_ssh_key = secrets.get_default_root_ssh_public_key(tkctx)
-            if root_ssh_key is None:
-                raise AuthenticationError('No default SSH public key available in secrets for application {0} customer {1}'.format(
-                    tkctx.app_id, tkctx.cust_id
-                ))
-            
-        requests.post('')
+        # TODO Since linode-api module is not importable due to some bug in it,
+        # implementing using raw HTTP requests.
+        params = {
+            'type': node_type, 
+            'region': region, 
+            'distribution': distribution, 
+            'root_pass': root_password,
+            'root_ssh_key' : root_ssh_key
+        }
         
-        # If there's no 'root_pass' argument, the library autogenerates a password.
-        # If there's no 'root_ssh_key' argument, there won't be SSH key authentication.
-        l, passwd = client.linode.create_instance(node_type, region, distribution=distribution, 
-            root_ssh_key='/home/karthik/.ssh/id_rsa.pub')
+        params_json = json.dumps(params)
+        
+        headers = {
+            'Authorization' : 'token ' + v4_token,
+            'Content-type' : 'application/json'
+        }
+        
+        try:
+            resp = requests.post(V4_API_URL + '/linode/instances', data=params_json, 
+                headers=headers)
+                
+            resp.raise_for_status()
+                
+        except requests.exceptions.RequestException as e:
+            # TODO Tell caller about failure immediately. No retry logic in this service
+            # that's for the higher abstraction level caller to decide.
+            pass
             
+        # Ask for a private IP address immediately.
+        linode = resp.json()
+        params = {
+            'type' : 'private'
+        }
+        params_json = json.dumps(params)
+        requests.post(V4_API_URL + '/linode/instances/{}/ips'.format(linode['id'], 
+            data=params_json, headers=headers)
+        https://api.linode.com/v4/linode/instances/$linode_id/ips
+        
+        
+          
             
     #============================ PRIVATE ==============================
 

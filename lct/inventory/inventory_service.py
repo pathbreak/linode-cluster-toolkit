@@ -1,9 +1,11 @@
 class InventoryService(object):
     '''
-    Interface for storing and querying cluster information. 
-    The interface is implemented by different storage providers which
-    can store data in structured text files or relational or NoSQL databases
-    or any other storage backend.
+    Interface for creating and providing an inventory implementation provider
+    that stores cluster and node information, and supports queries on them.
+    
+    Use InventoryService.provider() to get the interface to store and query
+    inventory information.
+    
     '''
     def __init__(self):
          self._initialized = False

@@ -1,16 +1,11 @@
-class TaskService(object):
+class ConfigurationService(object):
     '''
-    Provides task queuing, parallel execution, retrying, and error handling of tasks
-    for the toolkit itself and for clients of the toolkit.
-    
-    It delegates actual task management to a task provider implementation
-    instantiated according to provided toolkit configuration. 
+    Interface for performing configuration tasks, with support for multiple
+    techniques such as stackscripts, cloud-init, and local & remote Ansible.
     '''
-    
-    
     
     def __init__(self):
-        self._initialized = False
+         self._initialized = False
 
 
 
@@ -28,23 +23,12 @@ class TaskService(object):
             return
             
         self.tk = tk
-        
-        
+
+
         self._initialized = True
+
+
 
         
     def close(self):
         pass
-        
-    
-    
-    ####################### FUNCTIONALITY: #############################
-    
-    
-    
-    def task_store(self):
-        return self._task_store
-        
-    
-
-

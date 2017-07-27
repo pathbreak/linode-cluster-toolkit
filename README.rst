@@ -122,6 +122,10 @@ Installation
 
 Both the toolkit library and LinodeTool are part of the same Python package.
 
+Python 3 or Python 2 should be installed on the machine where the toolkit
+or linodetool are executed. Python is usually already installed in most 
+modern Linux distributions.
+
 Until this package is published to PyPI, install it using ``pip`` to pull 
 from this GitHub repo:
 

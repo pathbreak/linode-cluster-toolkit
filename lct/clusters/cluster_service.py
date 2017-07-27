@@ -1,7 +1,7 @@
 import uuid
 
 from lct.tasks.toolkit_task import ToolkitTask
-
+from lct.tasks.tep import TaskExecutionPlan
 
 class ClusterService(object):
     '''
@@ -103,14 +103,25 @@ class ClusterService(object):
         #   queue service. It's upto the toolkit configuration and task queue logic to decide
         #   the actual parallelism of tasks.
         
+        
+        task_plan = TaskExecutionPlan(
+            self.tk, 
+            'create cluster {} ({})'.format(cluster.app_defn_cluster_name, cluster.uuid))
+        
         for r in cluster_plan.regions():
             for nodeplan in r.nodes:
                 print('Create {0} nodes of type {1} in region {2}'.format(nodeplan.count, nodeplan.type, r.region))
 
                 # Create concurrent node creation+initialization+store task
                 # for each node.
-                for i in nodeplan.count:
-                    pass
+                for i in range(nodeplan.count):
+                    # TODO fill params
+                    params = {}
+                    node_task = SingleNodeCreationTask(params)
+                    task_plan.add(node_task)
+                    
+        # Persist this task plan to database so we can track it.
+        task_plan.save()
 
         return cluster
 
